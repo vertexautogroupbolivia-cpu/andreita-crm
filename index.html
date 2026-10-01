@@ -141,7 +141,7 @@ async function entrar(){$('#login').style.display='none';
  r()}
 const td=()=>new Date().toISOString().slice(0,10);
 const fx=s=>s?s.split('-').reverse().join('/'):'';
-const wa=(p,t)=>{p=(p||'').replace(/\D/g,'');if(p.length==8)p='591'+p;return 'https://wa.me/'+p+(t?'?text='+encodeURIComponent(t):'')};
+const wa=(p,t)=>{p=(p||'').replace(/\D/g,'');if(p.length==8)p='591'+p;const m=/Android|iPhone|iPad/i.test(navigator.userAgent);return m?'https://wa.me/'+p+(t?'?text='+encodeURIComponent(t):''):'https://web.whatsapp.com/send?phone='+p+(t?'&text='+encodeURIComponent(t):'')};
 function go(t){document.querySelectorAll('nav button,.sec').forEach(x=>x.classList.remove('on'));const b=document.querySelector('nav button[data-t="'+t+'"]');if(b)b.classList.add('on');$('#'+t).classList.add('on');r();scrollTo(0,0)}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
 $('#fst').innerHTML+=ST.map((s,i)=>`<option value="${i}">${s}</option>`).join('');
@@ -170,8 +170,8 @@ function edit(id){const c=C.find(x=>x.id==id)||{id:'',name:'',phone:'',interest:
  <label class="mu">Próximo seguimiento</label><input id="x" type="date" value="${c.next}">
  <textarea id="nt" rows="2" placeholder="Nueva nota de la conversación"></textarea>
  <div class="row"><button onclick="save('${c.id}')">Guardar</button><button class="s" onclick="$('#dlg').close()">Cerrar</button>
- ${id?`<a href="${wa(c.phone)}" target="_blank"><button type="button" class="s">WhatsApp</button></a><a href="tel:${esc(c.phone)}"><button type="button" class="s">Llamar</button></a><button class="d" onclick="del('${c.id}')">Eliminar</button>`:''}</div>
- ${id?`<h2>Frases sugeridas</h2>`+fr.map(x=>{const t=x.t.replace(/{n}/g,c.name.split(' ')[0]);return `<div class="card"><div class="mu">${esc(t)}</div><div class="row"><a href="${wa(c.phone,t)}" target="_blank"><button type="button">Enviar por WhatsApp</button></a></div></div>`}).join('')+'<h2>Historial</h2>'+(c.notes.slice().reverse().map(n=>`<div class="card"><span class="mu">${fx(n.d)}</span><br>${esc(n.t)}</div>`).join('')||'<p class="mu">Sin notas.</p>'):''}`;
+ ${id?`<a href="${wa(c.phone)}" target="wa_crm"><button type="button" class="s">WhatsApp</button></a><a href="tel:${esc(c.phone)}"><button type="button" class="s">Llamar</button></a><button class="d" onclick="del('${c.id}')">Eliminar</button>`:''}</div>
+ ${id?`<h2>Frases sugeridas</h2>`+fr.map(x=>{const t=x.t.replace(/{n}/g,c.name.split(' ')[0]);return `<div class="card"><div class="mu">${esc(t)}</div><div class="row"><a href="${wa(c.phone,t)}" target="wa_crm"><button type="button">Enviar por WhatsApp</button></a></div></div>`}).join('')+'<h2>Historial</h2>'+(c.notes.slice().reverse().map(n=>`<div class="card"><span class="mu">${fx(n.d)}</span><br>${esc(n.t)}</div>`).join('')||'<p class="mu">Sin notas.</p>'):''}`;
  $('#dlg').showModal()}
 async function save(id){const n=$('#n').value.trim();if(!n)return alert('Escribe el nombre');
  let c=C.find(x=>x.id==id);if(!c){c={id:crypto.randomUUID(),notes:[]};C.push(c)}
