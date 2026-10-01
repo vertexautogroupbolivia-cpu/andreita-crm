@@ -131,7 +131,7 @@ const sb=supabase.createClient(SUPA_URL,SUPA_KEY);let C=[],F=[],A=[],U=null;
 const dbUp=async(tipo,o)=>{const {id,...datos}=o;const {error}=await sb.from('registros').upsert({id,user_id:U.id,tipo,datos});if(error)alert('No se pudo guardar: '+error.message)};
 const dbDel=async id=>{await sb.from('registros').delete().eq('id',id)};
 async function init(){const {data}=await sb.auth.getSession();if(data.session){U=data.session.user;await entrar()}else $('#login').style.display='flex'}
-async function login(){const {data,error}=await sb.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});if(error)return $('#lm').textContent='Correo o contraseña incorrectos';U=data.user;await entrar()}
+async function login(){$('#lm').textContent='Ingresando…';try{const {data,error}=await sb.auth.signInWithPassword({email:$('#le').value.trim(),password:$('#lp').value});if(error)return $('#lm').textContent=/invalid login/i.test(error.message)?'Correo o contraseña incorrectos':'Error: '+error.message;U=data.user;await entrar()}catch(e){$('#lm').textContent='Error: '+e.message}}
 async function salir(){await sb.auth.signOut();location.reload()}
 async function entrar(){$('#login').style.display='none';
  const {data,error}=await sb.from('registros').select('*').order('creado');
